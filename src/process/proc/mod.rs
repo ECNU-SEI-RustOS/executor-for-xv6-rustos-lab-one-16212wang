@@ -526,14 +526,52 @@ impl Proc {
             19 => self.sys_link(),
             20 => self.sys_mkdir(),
             21 => self.sys_close(),
+            22 => self.sys_trace(),
             _ => {
                 panic!("unknown syscall num: {}", a7);
             }
         };
-        tf.a0 = match sys_result {
+
+         let ret = match sys_result {
             Ok(ret) => ret,
             Err(()) => -1isize as usize,
         };
+        tf.a0 = ret;
+
+        let trace_mask = self.excl.lock().trace_mask;
+        if (trace_mask & (1u32 << a7)) != 0 {
+            let sys_name = self.syscall_name(a7);
+            let pid = self.excl.lock().pid;
+            println!("{}: syscall {} -> {}", pid, sys_name, ret);
+        }
+    }
+
+    fn syscall_name(&self, num: usize) -> &'static str {
+        match num {
+            1 => "fork",
+            2 => "exit",
+            3 => "wait",
+            4 => "pipe",
+            5 => "read",
+            6 => "kill",
+            7 => "exec",
+            8 => "fstat",
+            9 => "chdir",
+            10 => "dup",
+            11 => "getpid",
+            12 => "sbrk",
+            13 => "sleep",
+            14 => "uptime",
+            15 => "open",
+            16 => "write",
+            17 => "mknod",
+            18 => "unlink",
+            19 => "link",
+            20 => "mkdir",
+            21 => "close",
+            22 => "trace",
+            _ => "unknown",
+        }
     }
 
     /// # 功能说明
