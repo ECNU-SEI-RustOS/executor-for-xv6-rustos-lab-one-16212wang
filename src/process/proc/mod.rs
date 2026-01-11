@@ -542,7 +542,9 @@ impl Proc {
         if (trace_mask & (1u32 << a7)) != 0 {
             let sys_name = self.syscall_name(a7);
             let pid = self.excl.lock().pid;
-            println!("{}: syscall {} -> {}", pid, sys_name, ret);
+            let print_ret = if sys_result.is_err() { -1 } else { ret as i64 };
+            println!("{}: syscall {} -> {}", pid, sys_name, print_ret);
+  
         }
 
     }

@@ -915,6 +915,35 @@ impl PageTable {
             debug_assert_eq!(src, va.as_usize());
         }
     }
+
+    pub fn vm_print(&self, level: usize) {
+        // 打印页表起始地址（仅在顶层打印）
+        if level == 0 {
+            println!("page table {:#x}", self as *const PageTable as usize);
+        }
+
+        // 遍历所有页表项
+        for (i, pte) in self.data.iter().enumerate() {
+            // 只打印有效的页表项
+            if pte.is_valid() {
+                // 打印缩进
+                for _ in 0..level {
+                    print!(" ..");
+                }
+
+                // 打印页表项信息
+                println!("..{}: pte {:#x} pa {:#x}", i, pte.data, pte.as_phys_addr().as_usize());
+
+                // 如果不是叶子节点，递归打印子页表
+                if !pte.is_leaf() {
+                    unsafe {
+                        let child_pgt = pte.as_page_table();
+                        child_pgt.as_ref().unwrap().vm_print(level + 1);
+                    }
+                }
+            }
+        }
+    }
 }
 
 impl Drop for PageTable {
