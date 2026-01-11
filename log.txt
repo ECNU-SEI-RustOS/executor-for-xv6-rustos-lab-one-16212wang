@@ -1,0 +1,11 @@
+make clean
+make[1]: Entering directory '/home/wang/code/executor-for-xv6-rustos-lab-one-16212wang'
+rm -rf kernel.S
+cargo clean
+rm -f user/*.o user/*.d user/*.asm user/*.sym \
+user/initcode user/initcode.out fs.img \
+mkfs/mkfs .gdbinit xv6.out* \
+user/usys.S \
+user/_cat user/_echo user/_forktest user/_grep user/_init user/_kill user/_ln user/_ls user/_mkdir user/_rm user/_sh user/_stressfs user/_usertests user/_grind user/_wc user/_zombie user/_trace 
+make[1]: Leaving directory '/home/wang/code/executor-for-xv6-rustos-lab-one-16212wang'
+./grade-lab

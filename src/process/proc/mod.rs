@@ -532,7 +532,7 @@ impl Proc {
             }
         };
 
-         let ret = match sys_result {
+        let ret = match sys_result {
             Ok(ret) => ret,
             Err(()) => -1isize as usize,
         };
@@ -544,6 +544,7 @@ impl Proc {
             let pid = self.excl.lock().pid;
             println!("{}: syscall {} -> {}", pid, sys_name, ret);
         }
+
     }
 
     fn syscall_name(&self, num: usize) -> &'static str {

@@ -5,7 +5,6 @@
 #![feature(alloc_error_handler)]
 #![allow(dead_code)]
 #![warn(rust_2018_idioms)]
-#![feature(new_zeroed_alloc)]
 
 use core::arch::global_asm;
 
